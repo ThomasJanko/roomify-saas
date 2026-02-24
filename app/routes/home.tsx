@@ -2,6 +2,7 @@ import { ArrowRight, ArrowUpRight, Clock, Layers } from 'lucide-react';
 import type { Route } from './+types/home';
 import NavBar from 'components/NavBar';
 import Button from 'components/ui/Button';
+import Upload from 'components/upload';
 
 export function meta({}: Route.MetaArgs) {
    return [{ title: 'New React Router App' }, { name: 'description', content: 'Welcome to React Router!' }];
@@ -42,7 +43,7 @@ export default function Home() {
                      <h3>Upload your floor plan</h3>
                      <p>Support JPG, PNG formats up to 10MB</p>
                   </div>
-                  <p>Upload images</p>
+                  <Upload />
                </div>
             </div>
          </section>
