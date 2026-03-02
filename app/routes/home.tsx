@@ -3,12 +3,24 @@ import type { Route } from './+types/home';
 import NavBar from 'components/NavBar';
 import Button from 'components/ui/Button';
 import Upload from 'components/upload';
+import { useNavigate } from 'react-router';
 
 export function meta({}: Route.MetaArgs) {
-   return [{ title: 'New React Router App' }, { name: 'description', content: 'Welcome to React Router!' }];
+   return [
+      { title: 'New React Router App' },
+      { name: 'description', content: 'Welcome to React Router!' },
+   ];
 }
 
 export default function Home() {
+   const navigate = useNavigate();
+
+   const handleUploadComplete = (base64Data: string) => {
+      const newId = Date.now().toString();
+      navigate(`/visualizer/${newId}`);
+
+      return true;
+   };
    return (
       <div className="home">
          <NavBar />
@@ -22,8 +34,8 @@ export default function Home() {
             <h1>Build beautiful spaces at the speed of thought</h1>
             <p className="subtitle">
                {' '}
-               Roomify is an AI-first design environment that help you visualize, render and ship architectural projects
-               faster than ever.
+               Roomify is an AI-first design environment that help you visualize, render and ship
+               architectural projects faster than ever.
             </p>
             <div className="actions">
                <a href="#upload" className="cta">
@@ -43,7 +55,7 @@ export default function Home() {
                      <h3>Upload your floor plan</h3>
                      <p>Support JPG, PNG formats up to 10MB</p>
                   </div>
-                  <Upload />
+                  <Upload onComplete={handleUploadComplete} />
                </div>
             </div>
          </section>
