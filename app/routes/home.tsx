@@ -2,7 +2,7 @@ import { ArrowRight, ArrowUpRight, Clock, Layers } from 'lucide-react';
 import type { Route } from './+types/home';
 import NavBar from 'components/NavBar';
 import Button from 'components/ui/Button';
-import Upload from 'components/upload';
+import Upload from 'components/Upload';
 import { useNavigate } from 'react-router';
 
 export function meta({}: Route.MetaArgs) {
