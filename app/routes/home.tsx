@@ -4,7 +4,7 @@ import NavBar from 'components/NavBar';
 import Button from 'components/ui/Button';
 import Upload from 'components/Upload';
 import { useNavigate } from 'react-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { createProject } from 'lib/puter.action';
 
 export function meta({}: Route.MetaArgs) {
@@ -17,35 +17,45 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
    const navigate = useNavigate();
    const [projects, setProjects] = useState<DesignItem[]>([]);
+   const isCreatingProjectRef = useRef(false);
 
    const handleUploadComplete = async (base64Data: string) => {
-      const newId = Date.now().toString();
-      const name = `Residence ${newId}`;
+      try {
+         if (isCreatingProjectRef.current) return false;
+         isCreatingProjectRef.current = true;
+         const newId = Date.now().toString();
+         const name = `Residence ${newId}`;
 
-      const newItem = {
-         id: newId,
-         name,
-         sourceImage: base64Data,
-         renderedImage: undefined,
-         timestamp: Date.now(),
-      };
-
-      const saved = await createProject({ item: newItem, visibility: 'private' });
-      if (!saved) {
-         console.error(`Failed to save project`);
-         return false;
-      }
-
-      setProjects((prev) => [saved, ...prev]);
-      navigate(`/visualizer/${newId}`, {
-         state: {
-            initialImage: saved.sourceImage,
-            initialRender: saved.renderedImage || null,
+         const newItem = {
+            id: newId,
             name,
-         },
-      });
+            sourceImage: base64Data,
+            renderedImage: undefined,
+            timestamp: Date.now(),
+         };
 
-      return true;
+         const saved = await createProject({ item: newItem, visibility: 'private' });
+         if (!saved) {
+            console.error(`Failed to save project`);
+            return false;
+         }
+
+         setProjects((prev) => [saved, ...prev]);
+         navigate(`/visualizer/${newId}`, {
+            state: {
+               initialImage: saved.sourceImage,
+               initialRender: saved.renderedImage || null,
+               name,
+            },
+         });
+
+         return true;
+      } catch (error) {
+         console.error(`Failed to upload complete: ${error}`);
+         return false;
+      } finally {
+         isCreatingProjectRef.current = false;
+      }
    };
    return (
       <div className="home">
