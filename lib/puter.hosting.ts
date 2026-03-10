@@ -50,7 +50,7 @@ export const uploadImageToHosting = async ({
 
       if (!result) return null;
 
-      const contentType = result.contentType || result.blob.type;
+      const contentType = result.contentType || result.blob.type || '';
       const ext = getImageExtension(contentType, url);
       const dir = `projects/${projectId}`;
       const filePath = `${dir}/${label}.${ext}`;
